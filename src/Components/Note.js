@@ -23,7 +23,6 @@ const Note = ({id,text,date, tag, handleDeleteNote, onChange, changeTag}) => {
                  />
                  </>
                 
-                
             ):(
                 <span >{text}</span>
             )}

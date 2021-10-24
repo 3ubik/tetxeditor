@@ -1,38 +1,45 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import NoteList from "./Components/NoteList"
 import {nanoid} from 'nanoid'
 import Search from "./Components/Search"
 import Taglist from "./Components/TagList"
 
 
+
 const App = () => {
-  const [notes, setNotes] = useState([
-  {
-    id: nanoid(),
-    tag: '3',
-    text: 'sdvdv',
-    date: '15/04/2021'
-  },
-  {
-    id: nanoid(),
-    tag:'4',
-    text: 'second',
-    date: '16/07/2021'
-  },
-  {
-    id: nanoid(),
-    tag: '5',
-    text: 'third',
-    date: '18/03/2021'
-  }
-])
+  
+const [notes, setNotes] = useState([])
 
 const [searchTag, setSearchTag] = useState('')
 const [tags, setTags] = useState([])
 
+useEffect(()=>{
+  const savedNotes = JSON.parse(
+    localStorage.getItem('rect--notes--app--data')
+    )
+    const savedTags = JSON.parse(
+      localStorage.getItem('react--tags--app--data')
+    )
+  if(savedNotes){
+    setNotes(savedNotes)
+  }
+  if(savedTags){
+    setTags(savedTags)
+  }
 
-console.log(notes);
-console.log(tags);
+},[])
+
+useEffect(()=>{
+  localStorage.setItem(
+    'rect--notes--app--data',
+    JSON.stringify(notes)
+  )
+  localStorage.setItem(
+    'react--tags--app--data',
+    JSON.stringify(tags)
+  )
+  
+},[notes,tags])
 
 const addNote = (text) => {
 
@@ -61,8 +68,6 @@ const addNote = (text) => {
  
   setNotes(newNotes)
   setTags(newTags)
-  
-  
 }
 
 const deleteNote = (id) => {
@@ -99,22 +104,30 @@ const changeTag = (tag)=>{
 }
 
 const deleteTag = (tag) =>{
-  console.log(tag);
-  console.log(tags);
   const newTags = tags.filter((e)=> e !== tag)
-  console.log(newTags);
   setTags(newTags)
 }
 
-
+const AddTag = (text) =>{
+  if(!text.includes('#'))
+  {
+    const newTag = '#'+text
+    const newTags = [...new Set([...tags, newTag])]
+    setTags(newTags)
+  }else{
+    const newTag = text
+    const newTags = [...new Set([...tags, newTag])]
+    setTags(newTags)
+  }
+}
 
   return (
   <div className='container'>
     <Search handleSearchTag = {setSearchTag}/>
     <Taglist 
       tags = {tags}
-      //handleDeleteTag = {deleteTag}
       handleDeleteTag = {deleteTag}
+      handleAddTag = {AddTag}
       />
     <NoteList 
       notes = {notes.filter((el)=>el.tag.toString().toLowerCase().includes(searchTag))} 

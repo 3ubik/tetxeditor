@@ -1,15 +1,11 @@
 import React from "react"
+import AddTag from "./AddTag"
 import Tag from "./Tag"
-import {nanoid} from 'nanoid'
 
-const Taglist = ({tags, handleDeleteTag}) => {
+const Taglist = ({tags, handleDeleteTag, handleAddTag}) => {
     
     return (
-    
-        
-
     <div className = 'tag-list'>
-        <button className='tag-list-add'>Add tag</button>
         {tags.map((tag, index)=>
             <Tag
             key = {index}
@@ -17,7 +13,8 @@ const Taglist = ({tags, handleDeleteTag}) => {
             handleDeleteTag = {handleDeleteTag}
         />
         )}
-        
+        <AddTag handleAddTag={handleAddTag}/>
+    
     </div>
     )
 }
